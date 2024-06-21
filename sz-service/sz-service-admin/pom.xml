@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sz-service-admin</artifactId>
 
-    <!-- 全局公用dependency版本管理 -->
+    <!-- 当前pom文件属性设置 -->
     <properties>
         <flyway.version>10.12.0</flyway.version>
     </properties>
@@ -20,11 +20,22 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+            <version>3.1.7</version>
+        </dependency>
         <!-- 数据库依赖尽量独立引用，因为每个service引用的数据库有可能不同，因此就不再parent中配置公共的mysql依赖-->
         <!-- mysql数据库模块 -->
         <dependency>
             <groupId>com.sz</groupId>
             <artifactId>sz-common-db-mysql</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <!-- nacos模块 -->
+        <dependency>
+            <groupId>com.sz</groupId>
+            <artifactId>sz-common-nacos</artifactId>
             <version>${revision}</version>
         </dependency>
         <!--minio模块-->
@@ -78,6 +89,14 @@
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-mysql</artifactId>
             <version>${flyway.version}</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
         <!-- aspect aop 切面-->
         <dependency>

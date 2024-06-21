@@ -1,10 +1,12 @@
 spring:
+  application:
+    name: admin-service
+  profiles:
+    active: local
   threads:
     virtual:
       # 启用虚拟线程
       enabled: true
-  profiles:
-    active: local
   config:
     import:
       - classpath:config/${spring.profiles.active}/flyway.yml
@@ -15,11 +17,11 @@ spring:
       - classpath:config/${spring.profiles.active}/page-helper.yml
       - classpath:config/${spring.profiles.active}/redis.yml
       - classpath:config/${spring.profiles.active}/sa-token.yml
+
   mvc:
     path-match:
       matching-strategy: ant_path_matcher
-  application:
-    name: admin-service
+
   servlet:
     multipart:
       max-file-size: 10MB

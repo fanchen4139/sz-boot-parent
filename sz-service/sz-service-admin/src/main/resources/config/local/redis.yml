@@ -3,8 +3,9 @@ spring:
   data:
     redis:
       #单机配置
-      host: 127.0.0.1
-      port: 6379
+#      host: 127.0.0.1
+#      port: 6379
+#      password: 123456
       # 数据索引
       database: 0
       # 连接超时时间（毫秒）
@@ -20,7 +21,6 @@ spring:
           max-idle: 30
           # 连接池中的最小空闲连接
           min-idle: 10
-      password: 123456
 
 # 开启redis监听
 redis:
