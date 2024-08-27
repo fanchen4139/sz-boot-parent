@@ -74,7 +74,7 @@ public class ExcelDownHandler implements SheetWriteHandler {
                         try {
                             ExcelDynamicSelect excelDynamicSelect = classes[0].newInstance();
                             List<String> dynamicSelectSource = excelDynamicSelect.getSource();
-                            if (dynamicSelectSource != null && dynamicSelectSource.size() > 0) {
+                            if (dynamicSelectSource != null && !dynamicSelectSource.isEmpty()) {
                                 options = dynamicSelectSource;
                             }
                         } catch (InstantiationException | IllegalAccessException e) {
@@ -83,13 +83,13 @@ public class ExcelDownHandler implements SheetWriteHandler {
                     } else if (StringUtils.isNotBlank(dictType)) { // 根据dictType渲染下拉
                         DictService dictService = SpringApplicationContextUtils.getBean(DictService.class);
                         Map<String, String> allDictByDictType = dictService.getAllDict(dictType);
-                        if (allDictByDictType.size() > 0) {
+                        if (allDictByDictType != null && !allDictByDictType.isEmpty()) {
                             options = new ArrayList<>(allDictByDictType.keySet());
                         }
                     } else if (StringUtils.isNotBlank(converterExp)) { // 根据converterExp渲染下拉
                         options = ExcelUtils.listByExp(converterExp, separator);
                     }
-                    if (options.size() > 0) {
+                    if (options != null && !options.isEmpty()) {
                         dropDownWithSheet(helper, workbook, sheet, index, options);
                     }
                 }

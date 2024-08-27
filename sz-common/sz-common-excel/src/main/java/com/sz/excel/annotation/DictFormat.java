@@ -34,7 +34,7 @@ public @interface DictFormat {
      *
      * @return
      */
-    boolean isSelected() default true;
+    boolean isSelected() default false;
 
     /**
      * 动态下拉内容( 适用于导出模版的场景)

@@ -1,6 +1,5 @@
 package ${dtoPkg};
 
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 <#list importPackages as pkg>
@@ -11,6 +10,9 @@ import com.alibaba.excel.annotation.ExcelProperty;
 <#if hasDict == true>
 import com.sz.excel.convert.ExcelDictConvert;
 import com.sz.excel.annotation.DictFormat;
+</#if>
+<#if hasDateFormat == true>
+import org.springframework.format.annotation.DateTimeFormat;
 </#if>
 /**
  * <p>
@@ -46,5 +48,4 @@ public class ${dtoImportClassName} {
 
 </#if>
 </#list>
-
 }

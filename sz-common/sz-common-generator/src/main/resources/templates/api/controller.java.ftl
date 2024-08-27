@@ -1,6 +1,6 @@
 package ${controllerPkg};
 
-
+<#compress>
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,6 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
 <#if GeneratorInfo.hasExport == "1">
 import jakarta.servlet.http.HttpServletResponse;
 </#if>
+</#compress>
+
 
 /**
  * <p>
@@ -110,13 +112,14 @@ public class ${controllerClassName}  {
     @SaCheckPermission(value = "${exportPermission}", orRole = GlobalConstant.SUPER_ROLE)
   </#if>
     @PostMapping("/export")
-    public void exportExcel(${dtoListClassName} dto, HttpServletResponse response) {
+    public void exportExcel(@RequestBody ${dtoListClassName} dto, HttpServletResponse response) {
         ${serviceName}.exportExcel(dto, response);
     }
 </#if>
-
+<#compress>
 }
 <#-- 内建函数，实现首字母小写 -->
 <#function lower_case_first_letter str>
     <#return str?substring(0, 1)?lower_case + str?substring(1)>
 </#function>
+</#compress>

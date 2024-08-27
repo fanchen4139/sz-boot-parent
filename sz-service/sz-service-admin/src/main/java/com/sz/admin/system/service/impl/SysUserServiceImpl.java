@@ -3,6 +3,7 @@ package com.sz.admin.system.service.impl;
 import cn.dev33.satoken.secure.BCrypt;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.pagehelper.PageHelper;
 import com.mybatisflex.core.query.QueryChain;
 import com.mybatisflex.core.query.QueryWrapper;
@@ -21,10 +22,7 @@ import com.sz.admin.system.service.SysMenuService;
 import com.sz.admin.system.service.SysPermissionService;
 import com.sz.admin.system.service.SysUserDeptService;
 import com.sz.admin.system.service.SysUserService;
-import com.sz.core.common.entity.BaseUserInfo;
-import com.sz.core.common.entity.LoginUser;
-import com.sz.core.common.entity.PageResult;
-import com.sz.core.common.entity.SelectIdsDTO;
+import com.sz.core.common.entity.*;
 import com.sz.core.common.enums.CommonResponseEnum;
 import com.sz.core.common.event.EventPublisher;
 import com.sz.core.util.*;
@@ -120,6 +118,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      *
      * @param dto 用户信息
      */
+    @Transactional
     @Override
     public void create(SysUserCreateDTO dto) {
         SysUser user = BeanCopyUtils.copy(dto, SysUser.class);
@@ -131,6 +130,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         user.setAccountStatusCd("1000001");
         user.setUserTagCd("1001003");
         save(user);
+
+        if (dto.getDeptId() <= 0) return;
+        UserDeptDTO deptDTO = new UserDeptDTO();
+        deptDTO.setDeptIds(Collections.singletonList(dto.getDeptId()));
+        deptDTO.setUserIds(Collections.singletonList(user.getId()));
+        bindUserDept(deptDTO);
     }
 
     /**
@@ -415,19 +420,21 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
         loginUser.setPermissionAndMenuIds(btmPermissionMap);
         Map<String, String> ruleMap = sysPermissionService.buildMenuRuleMap(sysUser, findMenuIds);
-        String customUserKey = "customUser";
+        String customUserKey = "userRule";
         if (ruleMap.containsKey(customUserKey)) {
             String str = ruleMap.get(customUserKey);
-            List<Long> longs = JsonUtils.parseArray(str, Long.class);
+            Map<String, Set<Long>> map = JsonUtils.parseObject(str, new TypeReference<Map<String, Set<Long>>>() {
+            });
             ruleMap.remove(customUserKey);
-            loginUser.setCustomUserIds(longs);
+            loginUser.setUserRuleMap(map);
         }
-        String customDeptKey = "customDept";
+        String customDeptKey = "deptRule";
         if (ruleMap.containsKey(customDeptKey)) {
             String str = ruleMap.get(customDeptKey);
-            List<Long> longs = JsonUtils.parseArray(str, Long.class);
+            Map<String, Set<Long>> map = JsonUtils.parseObject(str, new TypeReference<Map<String, Set<Long>>>() {
+            });
             ruleMap.remove(customDeptKey);
-            loginUser.setCustomDeptIds(longs);
+            loginUser.setDeptRuleMap(map);
         }
         loginUser.setRuleMap(ruleMap); // 获取菜单的查询规则
         return loginUser;

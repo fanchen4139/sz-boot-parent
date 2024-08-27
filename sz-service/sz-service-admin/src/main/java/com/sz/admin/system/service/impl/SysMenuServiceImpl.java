@@ -160,7 +160,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
             this.mapper.syncTreeDeep();
             this.mapper.syncTreeHasChildren();
             // 同时删除角色
-            sysRoleService.removeByMenuId(new SelectIdsDTO(list));
+            // sysRoleService.removeByMenuId(new SelectIdsDTO(list));
             // 发布Permission 变更通知
             UserPermissionChangeMessage message = new UserPermissionChangeMessage(null, true);
             redisService.sendPermissionChangeMsg(message);
@@ -389,11 +389,10 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      */
     @Override
     public MenuPermissionVO hasExistsPermissions(MenuPermissionDTO dto) {
-        QueryWrapper wrapper = QueryWrapper.create();
-        if (Utils.isNotNull(dto.getId())) {
-            wrapper.ne(SysMenu::getId, dto.getId());
-        }
-        Long count = count(wrapper.eq(SysMenu::getPermissions, dto.getPermissions()));
+        QueryWrapper wrapper = QueryWrapper.create()
+                .ne(SysMenu::getId, dto.getId())
+                .eq(SysMenu::getPermissions, dto.getPermissions());
+        Long count = count(wrapper);
         MenuPermissionVO permissionVO = new MenuPermissionVO();
         permissionVO.setPermissionCount(count.intValue());
         return permissionVO;

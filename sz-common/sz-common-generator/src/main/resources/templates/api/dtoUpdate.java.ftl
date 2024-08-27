@@ -1,11 +1,13 @@
 package ${dtoPkg};
 
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 <#list importPackages as pkg>
 import ${pkg};
 </#list>
+<#if hasDateFormat == true>
+import org.springframework.format.annotation.DateTimeFormat;
+</#if>
 
 /**
  * <p>
@@ -37,5 +39,4 @@ public class ${dtoUpdateClassName} {
 
   </#if>
 </#list>
-
 }
